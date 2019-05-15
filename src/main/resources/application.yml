@@ -52,25 +52,17 @@ wechat:
   aesKey:
   msgDataFormat: JSON
 
-
   #微信支付配置
-  mchId: 1483469312
-  mchKey: 06C56A89949D617xxxxxxxxxxx
-  notifyUrl: "https://api.weixin.qq.com/sns/jscode2session"
+  mchId: #商户号
+  mchKey: #支付秘钥
+  notifyUrl: #支付回调地址
+  refundNotifyUrl: #退款回调地址
+  keyPath: # p12证书位置
   title: "xx外卖"
   trade_type: "JSAPI"
 
 template:
   paid_success: "E6ZqYI9cNBsOKV2KkQlrgLA0FQJ4aGZ4CpH2a8UPylI"
-
-#外网地址
-projectUrl:
-  weChatMaAuthorize: https://wechatapptest.natapp1.cc
-  weChatOpenAuthorize: https://wechatapptest.natapp1.cc
-  pay_url: "https://api.mch.weixin.qq.com/pay/unifiedorder"
-  refund_url: "https://api.mch.weixin.qq.com/secapi/pay/refund"
-
-
 
 
 jwt:

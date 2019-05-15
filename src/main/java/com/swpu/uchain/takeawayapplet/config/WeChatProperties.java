@@ -72,4 +72,9 @@ public class WeChatProperties {
      */
     private String tradeType;
 
+    /**
+     * 退款异步回调地址
+     */
+    private String refundNotifyUrl;
+
 }

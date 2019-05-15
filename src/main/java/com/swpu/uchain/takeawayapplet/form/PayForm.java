@@ -15,21 +15,13 @@ import java.math.BigDecimal;
 @Data
 public class PayForm {
 
+    @NotNull(message = "code不能为空")
+    @ApiModelProperty("微信code")
+    private String code;
+
     @NotNull(message = "订单号不能为空")
     @ApiModelProperty("商家订单号")
     private Long id;
-
-    @NotNull(message = "下单用户名不能为空")
-    @ApiModelProperty("下单用户名")
-    private String username;
-
-    @NotNull(message = "下单用户手机号不能为空")
-    @ApiModelProperty("下单用户手机号")
-    private String userPhone;
-
-    @NotNull(message = "用户地址不能为空")
-    @ApiModelProperty("用户地址")
-    private String userAddress;
 
     @NotNull(message = "订单总金额不能为空")
     @ApiModelProperty("订单总金额")

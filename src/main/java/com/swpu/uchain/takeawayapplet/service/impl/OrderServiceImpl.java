@@ -16,7 +16,11 @@ import com.swpu.uchain.takeawayapplet.redis.RedisService;
 import com.swpu.uchain.takeawayapplet.redis.key.OrderKey;
 import com.swpu.uchain.takeawayapplet.service.OrderService;
 import com.swpu.uchain.takeawayapplet.service.PayService;
-import com.swpu.uchain.takeawayapplet.util.*;
+import com.swpu.uchain.takeawayapplet.util.OrderMasterConversionDTOUtil;
+import com.swpu.uchain.takeawayapplet.util.RandomUtil;
+import com.swpu.uchain.takeawayapplet.util.ResultUtil;
+import com.swpu.uchain.takeawayapplet.util.TimeUtil;
+import com.swpu.uchain.takeawayapplet.util.wechatUtil.GetOpenIdUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,7 +123,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public ResultVO findListByOpenId(String code) {
-        String openId = GetOpenIdUtil.getOpenId(code);
+        GetOpenIdUtil getOpenIdUtil = new GetOpenIdUtil();
+        String openId = getOpenIdUtil.getOpenId(code);
         List<OrderMaster> orderMasters = redisService.getArraylist(OrderKey.orderKerByOpenId, openId, OrderMaster.class);
         if (orderMasters == null || orderMasters.size() == 0) {
             orderMasters = orderMasterMapper.findListByOpenId(openId);
@@ -220,23 +225,20 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public ResultVO paidOrder(OrderDTO orderDTO) {
+    public boolean paidOrder(OrderDTO orderDTO) {
         //判断订单状态
         if (!orderDTO.getOrderStatus().equals(OrderStatusEnum.NEW.getCode())) {
-            log.info("【支付订单】修改订单状态失败 orderId={},orderStatus={}", orderDTO.getId(), orderDTO.getOrderStatus());
-            return ResultUtil.error(ResultEnum.ORDER_STATUS_ERROR);
+            log.error("【支付订单】修改订单状态失败 orderId={},orderStatus={}", orderDTO.getId(), orderDTO.getOrderStatus());
+            return false;
         }
         //判断支付状态
         if (!orderDTO.getPayStatus().equals(PayStatusEnum.WAIT.getCode())) {
-            log.info("【支付订单】修改订单状态失败  orderId={},payStatus={}", orderDTO.getId(), orderDTO.getPayStatus());
-            return ResultUtil.error(ResultEnum.PAY_STATUS_ERROR);
+            log.error("【支付订单】修改订单状态失败  orderId={},payStatus={}", orderDTO.getId(), orderDTO.getPayStatus());
+            return false;
         }
         orderDTO.setPayStatus(PayStatusEnum.SUCCESS.getCode());
         OrderMaster orderMaster = OrderMasterConversionDTOUtil.convert(orderDTO);
-        if (update(orderMaster)) {
-            return ResultUtil.success(orderDTO);
-        }
-        return ResultUtil.error(ResultEnum.SERVER_ERROR);
+        return (update(orderMaster));
     }
 
     @Override

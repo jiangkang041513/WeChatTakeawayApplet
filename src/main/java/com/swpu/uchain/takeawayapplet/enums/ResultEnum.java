@@ -25,6 +25,7 @@ public enum ResultEnum {
     PAY_FILE(41, "支付失败"),
     AMOUNT_ERROR(42, "金额不匹配"),
     PARAMETER_NOT_MATCH(43,"回调参数不匹配" ),
+    REFUND_ERROR(44,"退款失败"),
 
     AUTHENTICATION_ERROR(401,"用户认证失败,请重新登录" ),
     PERMISSION_DENNY(403,"权限不足" ),

@@ -30,7 +30,7 @@ public interface OrderService {
 
     ResultVO finishOrder(OrderDTO orderDTO);
 
-    ResultVO paidOrder(OrderDTO orderDTO);
+    boolean paidOrder(OrderDTO orderDTO);
 
     ResultVO findAllList();
 }

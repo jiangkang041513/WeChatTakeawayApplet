@@ -6,14 +6,42 @@ import com.swpu.uchain.takeawayapplet.form.RefundForm;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 public interface PayService {
 
-    ResultVO creat(PayForm payForm, String code,HttpServletRequest request);
+    /**
+     * 发起预支付请求
+     *
+     * @param payForm
+     * @param request
+     * @return
+     */
+    ResultVO creat(PayForm payForm, HttpServletRequest request);
 
-    ResultVO notify(HttpServletRequest request, HttpServletResponse response) throws IOException, Exception;
-
+    /**
+     * 发起退款请求
+     *
+     * @param refundForm
+     * @return
+     */
     ResultVO refund(RefundForm refundForm);
+
+    /**
+     * 支付回调
+     *
+     * @param request
+     * @param response
+     * @return
+     */
+    String notify(HttpServletRequest request, HttpServletResponse response);
+
+    /**
+     * 退款回调
+     *
+     * @param request
+     * @param response
+     * @return
+     */
+    String refundNotify(HttpServletRequest request, HttpServletResponse response);
 
 }
