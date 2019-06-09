@@ -4,9 +4,9 @@ import com.swpu.uchain.takeawayapplet.dto.OrderDTO;
 import com.swpu.uchain.takeawayapplet.enums.ResultEnum;
 import com.swpu.uchain.takeawayapplet.form.OrderForm;
 import com.swpu.uchain.takeawayapplet.service.OrderService;
-import com.swpu.uchain.takeawayapplet.util.GetOpenIdUtil;
 import com.swpu.uchain.takeawayapplet.util.OrderFormConversionDTOUtil;
 import com.swpu.uchain.takeawayapplet.util.ResultUtil;
+import com.swpu.uchain.takeawayapplet.util.wechatUtil.GetOpenIdUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +31,12 @@ public class BuyerOrderController {
     @Autowired
     private OrderService orderService;
 
+    private GetOpenIdUtil getOpenIdUtil;
+
     @ApiOperation("创建订单接口")
     @PostMapping(value = "/creat", name = "创建订单")
     public Object creatOrder(String code, OrderForm orderForm) {
-        orderForm.setOpenId(GetOpenIdUtil.getOpenId(code));
+        orderForm.setOpenId(getOpenIdUtil.getOpenId(code));
 
         OrderDTO orderDTO = OrderFormConversionDTOUtil.convert(orderForm);
         if (CollectionUtils.isEmpty(orderDTO.getOrderDetails())) {

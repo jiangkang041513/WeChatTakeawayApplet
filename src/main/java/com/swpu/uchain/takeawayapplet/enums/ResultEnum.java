@@ -37,7 +37,7 @@ public enum ResultEnum {
     APPID_NOT_EXIST(20, "appid配置错误"),
     USER_NOT_EXIST(21, "用户不存在"),
     DECRYPTION_FAILURE(22, "用户信息解密失败"),
-    USER_EXIST(23,"此用户名已被注册" ), ;
+    USER_EXIST(23,"此用户名已被注册" ), PRINT_LENGTH_ERROR(22,"打印长度错误" );
 
     private Integer code;
 

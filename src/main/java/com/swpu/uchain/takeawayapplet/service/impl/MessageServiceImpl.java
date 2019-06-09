@@ -5,7 +5,7 @@ import com.swpu.uchain.takeawayapplet.VO.WechatMsgVO;
 import com.swpu.uchain.takeawayapplet.config.TemplateProperties;
 import com.swpu.uchain.takeawayapplet.service.MessageService;
 import com.swpu.uchain.takeawayapplet.util.TimeUtil;
-import com.swpu.uchain.takeawayapplet.util.WechatSendMessageUtil;
+import com.swpu.uchain.takeawayapplet.util.wechatUtil.WechatSendMessageUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
