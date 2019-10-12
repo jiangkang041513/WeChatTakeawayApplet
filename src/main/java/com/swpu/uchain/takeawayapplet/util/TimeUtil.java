@@ -1,6 +1,7 @@
 package com.swpu.uchain.takeawayapplet.util;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -44,4 +45,28 @@ public class TimeUtil {
         return format.format(date);
     }
 
+    public static String stampToTime(long stamp) {
+        String time;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date(stamp * 1000);
+        time = simpleDateFormat.format(date);
+        return time;
+
+    }
+
+    /**
+     * 当前时间 +1天
+     * @param stamp
+     * @return
+     */
+    public static String addCurrentTime(long stamp) {
+        String time;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date(stamp * 1000);
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(Calendar.DAY_OF_MONTH, 1);
+        date = c.getTime();
+        return format.format(date);
+    }
 }

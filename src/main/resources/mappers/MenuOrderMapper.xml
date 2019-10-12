@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.swpu.uchain.takeawayapplet.dao.MenuOrderMapper" >
+  <resultMap id="BaseResultMap" type="com.swpu.uchain.takeawayapplet.entity.MenuOrder" >
+    <id column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <id column="menu_base_id" property="menuBaseId" jdbcType="INTEGER" />
+    <id column="food_type" property="foodType" jdbcType="INTEGER" />
+    <result column="creat_time" property="creatTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map" >
+    delete from menu_order
+    where order_id = #{orderId,jdbcType=VARCHAR}
+      and menu_base_id = #{menuBaseId,jdbcType=INTEGER}
+      and food_type = #{foodType,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByOrderId">
+    delete from menu_order
+    where order_id = #{orderId}
+  </delete>
+
+  <insert id="insert" parameterType="com.swpu.uchain.takeawayapplet.entity.MenuOrder" >
+    insert into menu_order (order_id, menu_base_id, food_type, 
+      creat_time)
+    values (#{orderId,jdbcType=VARCHAR}, #{menuBaseId,jdbcType=INTEGER}, #{foodType,jdbcType=INTEGER}, 
+      #{creatTime,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.swpu.uchain.takeawayapplet.entity.MenuOrder" >
+    update menu_order
+    set creat_time = #{creatTime,jdbcType=VARCHAR}
+    where order_id = #{orderId,jdbcType=VARCHAR}
+      and menu_base_id = #{menuBaseId,jdbcType=INTEGER}
+      and food_type = #{foodType,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="map" >
+    select order_id, menu_base_id, food_type, creat_time
+    from menu_order
+    where order_id = #{orderId,jdbcType=VARCHAR}
+      and menu_base_id = #{menuBaseId,jdbcType=INTEGER}
+      and food_type = #{foodType,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select order_id, menu_base_id, food_type, creat_time
+    from menu_order
+  </select>
+  <select id="selectByCreatTime" resultType="java.lang.String">
+    select order_id
+    from menu_order
+    where creat_time=#{realDate} limit 1
+
+  </select>
+  <select id="selectByOrderId" resultType="com.swpu.uchain.takeawayapplet.entity.MenuOrder">
+    select order_id, menu_base_id, food_type, creat_time
+    from menu_order
+    where order_id=#{orderId} and food_type=#{foodType}
+  </select>
+  <select id="selectIdByCreatTime" resultType="java.lang.String">
+    select order_id
+    from menu_order
+    where creat_time between #{param1} and #{param2}
+  </select>
+
+  <select id="getClickNum" resultType="com.swpu.uchain.takeawayapplet.VO.MenuBaseAndClickNumVO">
+    select o.menu_base_id,b.product_name,
+    count(o.menu_base_id) as count
+    from
+    menu_order o,
+    menu_base b
+    where o.menu_base_id = b.id
+    and
+    creat_time between #{param1} and #{param2}
+    group by o.menu_base_id
+    ORDER BY COUNT(o.menu_base_id) DESC
+  </select>
+</mapper>

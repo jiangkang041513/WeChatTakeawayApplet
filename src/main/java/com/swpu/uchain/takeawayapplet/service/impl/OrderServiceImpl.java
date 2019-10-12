@@ -143,7 +143,7 @@ public class OrderServiceImpl implements OrderService {
         Long orderId = RandomUtil.creatRandom();
         BigDecimal orderAmount = new BigDecimal(BigInteger.ZERO);
         TimeUtil timeUtil = new TimeUtil();
-        String creatTime = timeUtil.getNowTime();
+        String creatTime = TimeUtil.getNowTime();
         //查询商品(数量，单价)
         for (OrderDetail orderDetail : orderDTO.getOrderDetails()) {
             ProductInfo productInfo = productInfoMapper.selectByPrimaryKey(orderDetail.getProductId());

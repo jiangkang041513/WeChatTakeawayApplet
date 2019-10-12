@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.swpu.uchain.takeawayapplet.dao.MenuBaseTypeMapper" >
+  <resultMap id="BaseResultMap" type="com.swpu.uchain.takeawayapplet.entity.MenuBaseType" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="menu_base_type" property="menuBaseType" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from menu_base_type
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.swpu.uchain.takeawayapplet.entity.MenuBaseType" >
+    insert into menu_base_type (id, menu_base_type)
+    values (#{id,jdbcType=INTEGER}, #{menuBaseType,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.swpu.uchain.takeawayapplet.entity.MenuBaseType" >
+    update menu_base_type
+    set menu_base_type = #{menuBaseType,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select id, menu_base_type
+    from menu_base_type
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, menu_base_type
+    from menu_base_type
+  </select>
+    <select id="selectAllMenuBaseType" resultType="com.swpu.uchain.takeawayapplet.dto.MenuBaseDTO">
+      select id,menu_base_type
+      from menu_base_type
+    </select>
+    <select id="selectByBaseName" resultType="com.swpu.uchain.takeawayapplet.entity.MenuBaseType">
+      select id,menu_base_type
+      from menu_base_type
+      where menu_base_type = #{menuBaseType}
+    </select>
+</mapper>

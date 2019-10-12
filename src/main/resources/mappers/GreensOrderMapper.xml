@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.swpu.uchain.takeawayapplet.dao.GreensOrderMapper">
+  <resultMap id="BaseResultMap" type="com.swpu.uchain.takeawayapplet.entity.GreensOrder">
+    <id column="preorder_id" jdbcType="VARCHAR" property="preorderId" />
+    <id column="green_product_id" jdbcType="INTEGER" property="greenProductId" />
+    <result column="greens_num" jdbcType="INTEGER" property="greensNum" />
+    <result column="unit_price" jdbcType="DECIMAL" property="unitPrice" />
+    <result column="total_price" jdbcType="DECIMAL" property="totalPrice" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="phone_num" jdbcType="VARCHAR" property="phoneNum" />
+    <result column="contact" jdbcType="VARCHAR" property="contact" />
+    <result column="creat_time" jdbcType="VARCHAR" property="creatTime" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from greens_order
+    where preorder_id = #{preorderId,jdbcType=VARCHAR}
+      and green_product_id = #{greenProductId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.swpu.uchain.takeawayapplet.entity.GreensOrder">
+    insert into greens_order (preorder_id, green_product_id, greens_num, 
+      unit_price, total_price, address, 
+      phone_num, contact, creat_time
+      )
+    values (#{preorderId,jdbcType=VARCHAR}, #{greenProductId,jdbcType=INTEGER}, #{greensNum,jdbcType=INTEGER}, 
+      #{unitPrice,jdbcType=DECIMAL}, #{totalPrice,jdbcType=DECIMAL}, #{address,jdbcType=VARCHAR}, 
+      #{phoneNum,jdbcType=VARCHAR}, #{contact,jdbcType=VARCHAR}, #{creatTime,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.swpu.uchain.takeawayapplet.entity.GreensOrder">
+    update greens_order
+    set greens_num = #{greensNum,jdbcType=INTEGER},
+      unit_price = #{unitPrice,jdbcType=DECIMAL},
+      total_price = #{totalPrice,jdbcType=DECIMAL},
+      address = #{address,jdbcType=VARCHAR},
+      phone_num = #{phoneNum,jdbcType=VARCHAR},
+      contact = #{contact,jdbcType=VARCHAR},
+      creat_time = #{creatTime,jdbcType=VARCHAR}
+    where preorder_id = #{preorderId,jdbcType=VARCHAR}
+      and green_product_id = #{greenProductId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
+    select preorder_id, green_product_id, greens_num, unit_price, total_price, address, 
+    phone_num, contact, creat_time
+    from greens_order
+    where preorder_id = #{preorderId,jdbcType=VARCHAR}
+      and green_product_id = #{greenProductId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select preorder_id, green_product_id, greens_num, unit_price, total_price, address,
+    phone_num, contact, creat_time
+    from greens_order
+  </select>
+  <select id="selectAllByPreorderId" resultType="com.swpu.uchain.takeawayapplet.VO.GreensOrderVO">
+    select preorder_id, green_product_id, greens_num, unit_price, total_price, address,
+    phone_num, contact, creat_time
+    from greens_order
+    where preorder_id = #{preorderId}
+  </select>
+
+</mapper>
