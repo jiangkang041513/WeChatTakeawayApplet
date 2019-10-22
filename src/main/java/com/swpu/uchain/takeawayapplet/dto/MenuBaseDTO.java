@@ -16,6 +16,8 @@ public class MenuBaseDTO {
 
     private String menuBaseType;
 
+    private Integer sum;
+
     private List<MenuBaseVO> menuBaseVOList;
 
 }

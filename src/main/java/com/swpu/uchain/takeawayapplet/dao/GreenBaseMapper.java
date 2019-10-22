@@ -1,6 +1,9 @@
 package com.swpu.uchain.takeawayapplet.dao;
 
+import com.swpu.uchain.takeawayapplet.VO.GreenBaseListVO;
+import com.swpu.uchain.takeawayapplet.dto.GreenBaseDTO;
 import com.swpu.uchain.takeawayapplet.entity.GreenBase;
+
 import java.util.List;
 
 public interface GreenBaseMapper {
@@ -14,7 +17,12 @@ public interface GreenBaseMapper {
 
     int updateByPrimaryKey(GreenBase record);
 
-    List<GreenBase> selectAllByPid(String pid);
+    List<GreenBaseListVO> selectAllByPid(Integer pid);
+
+    List<GreenBase> selectByPid(Integer pid);
 
     GreenBase selectByPidAndProductName(Integer pid, String productName);
+
+    List<GreenBaseDTO> selectBaseAndExPandByPid(Integer pid);
+
 }

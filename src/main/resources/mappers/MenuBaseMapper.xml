@@ -53,4 +53,10 @@
     from menu_base
     where id = #{id}
   </select>
+
+   <select id="getListByTypeId" resultMap="BaseResultMap">
+        select id, product_name, base_type_id,click_num
+        from menu_base
+        where base_type_id=#{id}
+    </select>
 </mapper>

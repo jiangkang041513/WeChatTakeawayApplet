@@ -14,10 +14,16 @@ public class InsertGreenBaseForm {
 
     @ApiModelProperty("父类Id")
     @NotNull(message = "父类Id不能为空")
-    private Integer pid;
+    private Integer pId;
 
     @ApiModelProperty("产品名称")
     @NotNull(message = "产品名称不能为空")
     private String productName;
+
+    private String address;
+
+    private String phoneNum;
+
+    private String contact;
 
 }

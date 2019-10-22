@@ -28,12 +28,28 @@
     from menu_base_type
   </select>
     <select id="selectAllMenuBaseType" resultType="com.swpu.uchain.takeawayapplet.dto.MenuBaseDTO">
-      select id,menu_base_type
-      from menu_base_type
+    SELECT
+	menu_base_type.id as id,
+	menu_base_type,
+	COUNT( base_type_id )  as sum
+    FROM
+	menu_base_type
+	LEFT JOIN menu_base ON menu_base_type.id = menu_base.base_type_id
+	GROUP BY  id;
     </select>
     <select id="selectByBaseName" resultType="com.swpu.uchain.takeawayapplet.entity.MenuBaseType">
       select id,menu_base_type
       from menu_base_type
       where menu_base_type = #{menuBaseType}
     </select>
+  <select id="selectAllTypeAndBaseNum" resultType="com.swpu.uchain.takeawayapplet.VO.MenuBaseTypeVO">
+    SELECT
+	menu_base_type.id as id,
+	menu_base_type,
+	COUNT( base_type_id )  as sum
+    FROM
+	menu_base_type
+	LEFT JOIN menu_base ON menu_base_type.id = menu_base.base_type_id
+	GROUP BY  id;
+  </select>
 </mapper>

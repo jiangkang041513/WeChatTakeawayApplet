@@ -1,9 +1,6 @@
 package com.swpu.uchain.takeawayapplet.service.impl;
 
-import com.swpu.uchain.takeawayapplet.VO.MenuBaseAndClickNumVO;
-import com.swpu.uchain.takeawayapplet.VO.MenuBaseVO;
-import com.swpu.uchain.takeawayapplet.VO.MenuListVO;
-import com.swpu.uchain.takeawayapplet.VO.ResultVO;
+import com.swpu.uchain.takeawayapplet.VO.*;
 import com.swpu.uchain.takeawayapplet.dao.MenuBaseMapper;
 import com.swpu.uchain.takeawayapplet.dao.MenuBaseTypeMapper;
 import com.swpu.uchain.takeawayapplet.dao.MenuOrderMapper;
@@ -14,10 +11,7 @@ import com.swpu.uchain.takeawayapplet.entity.MenuBase;
 import com.swpu.uchain.takeawayapplet.entity.MenuBaseType;
 import com.swpu.uchain.takeawayapplet.entity.MenuOrder;
 import com.swpu.uchain.takeawayapplet.enums.ResultEnum;
-import com.swpu.uchain.takeawayapplet.form.GetClickForm;
-import com.swpu.uchain.takeawayapplet.form.InsertMenuBaseForm;
-import com.swpu.uchain.takeawayapplet.form.InsertMenuBaseTypeForm;
-import com.swpu.uchain.takeawayapplet.form.InsertMenuForm;
+import com.swpu.uchain.takeawayapplet.form.*;
 import com.swpu.uchain.takeawayapplet.service.MenuService;
 import com.swpu.uchain.takeawayapplet.util.RandomUtil;
 import com.swpu.uchain.takeawayapplet.util.ResultUtil;
@@ -51,6 +45,7 @@ public class MenuServiceImpl implements MenuService {
 
     private static Integer LUNCH = 0;
     private static Integer DINNER = 1;
+    private static Integer DEFAULT_LIST_ID = 6;
 
     public List<MenuBaseType> getAllMenuBaseType() {
         return baseTypeMapper.selectAll();
@@ -78,22 +73,30 @@ public class MenuServiceImpl implements MenuService {
         MenuBaseType baseType = new MenuBaseType();
         BeanUtils.copyProperties(typeForm, baseType);
         if (baseTypeMapper.insert(baseType) == 1) {
-            return ResultUtil.success(baseType);
+            MenuBaseType result = baseTypeMapper.selectByBaseName(baseType.getMenuBaseType());
+            return ResultUtil.success(result);
         }
         return ResultUtil.error(ResultEnum.SERVER_ERROR);
     }
 
     @Override
-    public ResultVO insertMenuBase(InsertMenuBaseForm baseForm) {
-        MenuBase base = baseMapper.selectByProductName(baseForm.getProductName());
-        if (base != null) {
-            return ResultUtil.error(ResultEnum.PRODUCT_EXIST);
+    public ResultVO insertMenuBase(List<InsertMenuBaseForm> baseForm) {
+        if (baseForm != null) {
+            List<MenuBase> result = new ArrayList<>();
+            for (InsertMenuBaseForm form : baseForm) {
+                MenuBase base = new MenuBase();
+                if (baseMapper.selectByProductName(form.getProductName()) != null) {
+                    return ResultUtil.error(form.getProductName() + "," + "此商品已经存在");
+                }
+                BeanUtils.copyProperties(form, base);
+                base.setClickNum(0);
+                if (baseMapper.insert(base) == 1) {
+                    result.add(base);
+                }
+            }
+            return ResultUtil.success(result);
         }
-        BeanUtils.copyProperties(baseForm, base);
-        if (baseMapper.insert(base) == 1) {
-            return ResultUtil.success(base);
-        }
-        return ResultUtil.error(ResultEnum.SERVER_ERROR);
+        return ResultUtil.error(ResultEnum.INSERT_MSG_CANNOT_NULL);
     }
 
     @Override
@@ -157,9 +160,75 @@ public class MenuServiceImpl implements MenuService {
     public ResultVO getHighestClickMenuBase(GetClickForm form) {
         String beginTime = TimeUtil.stampToTime(form.getBeginDate());
         String endTime = TimeUtil.addCurrentTime(form.getEndDate());
-        List<MenuBaseAndClickNumVO> vo = menuOrderMapper.getClickNum(beginTime,endTime);
+        List<MenuBaseAndClickNumVO> vo = menuOrderMapper.getClickNum(beginTime, endTime);
         return ResultUtil.success(vo);
 
+    }
+
+    @Override
+    public ResultVO selectAllMenuBaseType() {
+        List<MenuBaseTypeVO> result = baseTypeMapper.selectAllTypeAndBaseNum();
+        return ResultUtil.success(result);
+    }
+
+    @Override
+    public ResultVO deleteBaseType(Integer id) {
+        MenuBaseType type = baseTypeMapper.selectByPrimaryKey(id);
+        if (type == null) {
+            return ResultUtil.error(ResultEnum.BASE_TYPE_NOT_EXIST);
+        }
+        List<MenuBase> list = baseMapper.getListByTypeId(id);
+        if (baseTypeMapper.deleteByPrimaryKey(id) == 1) {
+            if (list != null) {
+                for (MenuBase base : list) {
+                    base.setBaseTypeId(DEFAULT_LIST_ID);
+                    baseMapper.updateByPrimaryKey(base);
+                }
+            }
+            return ResultUtil.success();
+        }
+        return ResultUtil.error(ResultEnum.SERVER_ERROR);
+    }
+
+    @Override
+    public ResultVO updateBaseType(MenuBaseType type) {
+        if (baseTypeMapper.selectByBaseName(type.getMenuBaseType()) != null) {
+            return ResultUtil.error(ResultEnum.BASE_TYPE_ALREADY_EXIST);
+        }
+        if (baseTypeMapper.selectByPrimaryKey(type.getId()) == null) {
+            return ResultUtil.error(ResultEnum.BASE_TYPE_NOT_EXIST);
+        }
+        if (baseTypeMapper.updateByPrimaryKey(type) == 1) {
+            return ResultUtil.success(type);
+        }
+        return ResultUtil.error(ResultEnum.SERVER_ERROR);
+    }
+
+    @Override
+    public ResultVO deleteMenuBase(Integer id) {
+        if (baseMapper.selectByPrimaryKey(id) == null) {
+            return ResultUtil.error(ResultEnum.PRODUCT_NOT_EXIST);
+        }
+        if (baseMapper.deleteByPrimaryKey(id) == 1) {
+            return ResultUtil.success();
+        }
+        return ResultUtil.error(ResultEnum.SERVER_ERROR);
+    }
+
+    @Override
+    public ResultVO updateMenuBaseName(UpdateMenuBaseForm form) {
+        MenuBase base = baseMapper.selectByPrimaryKey(form.getId());
+        if (base==null){
+            return ResultUtil.error(ResultEnum.PRODUCT_NOT_EXIST);
+        }
+        if (baseMapper.selectByProductName(form.getProductName())!=null){
+            return ResultUtil.error(ResultEnum.PRODUCT_EXIST);
+        }
+        base.setProductName(form.getProductName());
+        if (baseMapper.updateByPrimaryKey(base)==1){
+            return ResultUtil.success(base);
+        }
+        return ResultUtil.error(ResultEnum.SERVER_ERROR);
     }
 
 

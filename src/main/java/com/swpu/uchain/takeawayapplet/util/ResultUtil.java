@@ -49,4 +49,11 @@ public class ResultUtil {
         resultVO.setMsg(resultEnmus.getMsg());
         return resultVO;
     }
+
+    public static ResultVO error(String msg){
+        ResultVO resultVO = new ResultVO();
+        resultVO.setCode(1);
+        resultVO.setMsg(msg);
+        return resultVO;
+    }
 }

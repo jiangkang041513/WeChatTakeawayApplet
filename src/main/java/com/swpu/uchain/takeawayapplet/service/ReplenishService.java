@@ -3,6 +3,9 @@ package com.swpu.uchain.takeawayapplet.service;
 import com.swpu.uchain.takeawayapplet.VO.ResultVO;
 import com.swpu.uchain.takeawayapplet.form.InsertGreenBaseForm;
 import com.swpu.uchain.takeawayapplet.form.InsertGreensForm;
+import com.swpu.uchain.takeawayapplet.form.UpdateGreenBaseForm;
+
+import java.util.List;
 
 /**
  * @author hobo
@@ -10,11 +13,19 @@ import com.swpu.uchain.takeawayapplet.form.InsertGreensForm;
  */
 public interface ReplenishService {
 
-    ResultVO getGreensList(String pid);
+    ResultVO getGreensList();
 
     ResultVO insertGreens(InsertGreensForm form);
 
     ResultVO getAllOrderByPreorderId(String preorderId);
 
-    ResultVO insertGreenBase(InsertGreenBaseForm form);
+    ResultVO insertGreenBase(List<InsertGreenBaseForm> form);
+
+    ResultVO updateGreenBase(UpdateGreenBaseForm form);
+
+    ResultVO deleteGreenBase(Integer id);
+
+    ResultVO insertGreenBaseType(String baseType);
+
+    ResultVO getGreensTypeList();
 }

@@ -3,6 +3,7 @@ package com.swpu.uchain.takeawayapplet.service;
 import com.swpu.uchain.takeawayapplet.VO.ResultVO;
 import com.swpu.uchain.takeawayapplet.entity.User;
 import com.swpu.uchain.takeawayapplet.form.LoginForm;
+import com.swpu.uchain.takeawayapplet.form.UpdateUserForm;
 import com.swpu.uchain.takeawayapplet.form.UserForm;
 
 import javax.servlet.http.HttpServletResponse;
@@ -25,7 +26,13 @@ public interface UserService {
 
     ResultVO login(LoginForm loginForm, HttpServletResponse response);
 
-    ResultVO addRole(Long id);
+    ResultVO addRole(Long id,Integer role);
 
     ResultVO selectAll();
+
+    ResultVO updatePw(UpdateUserForm form);
+
+    ResultVO resetUserPw(long id);
+
+    ResultVO updateUserName(long id,String username);
 }

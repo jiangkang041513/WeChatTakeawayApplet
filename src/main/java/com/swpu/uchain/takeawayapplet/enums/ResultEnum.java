@@ -40,7 +40,10 @@ public enum ResultEnum {
     USER_EXIST(23,"此用户名已被注册" ), PRINT_LENGTH_ERROR(22,"打印长度错误" ),
     INSERT_MSG_CANNOT_NULL(24,"插入信息为空" ),
     BASE_TYPE_ALREADY_EXIST(45,"此菜品类型已存在" ), DATE_ERROR(46,"时间格式错误" ),
-    ORDER_ALREADY_EXIST(5,"今天菜单已存在" );
+    ORDER_ALREADY_EXIST(5,"今天菜单已存在" ), BASE_TYPE_NOT_EXIST(47,"此商品种类不存在" ),
+    GOODS_UNDER_THIS_CATEGORY(48,"此类目下还有商品，不能删除" ),
+    Insert_MSG_ERROR(24,"输入信息有误" ),
+    NON_PERSONAL_OPRERATION(25,"非本人不能操作");
 
     private Integer code;
 

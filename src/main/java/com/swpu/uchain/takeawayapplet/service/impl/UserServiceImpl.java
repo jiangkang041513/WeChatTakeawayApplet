@@ -4,7 +4,9 @@ import com.swpu.uchain.takeawayapplet.VO.ResultVO;
 import com.swpu.uchain.takeawayapplet.dao.UserMapper;
 import com.swpu.uchain.takeawayapplet.entity.User;
 import com.swpu.uchain.takeawayapplet.enums.ResultEnum;
+import com.swpu.uchain.takeawayapplet.enums.RoleEnum;
 import com.swpu.uchain.takeawayapplet.form.LoginForm;
+import com.swpu.uchain.takeawayapplet.form.UpdateUserForm;
 import com.swpu.uchain.takeawayapplet.form.UserForm;
 import com.swpu.uchain.takeawayapplet.redis.RedisService;
 import com.swpu.uchain.takeawayapplet.redis.key.UserKey;
@@ -65,6 +67,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private JwtUserDetailServiceImpl jwtUserDetailService;
 
+    private static String DEFAULT_PASSWORD = "123456";
+
     @Override
     public boolean insert(User user) {
         if (userMapper.insert(user) == 1) {
@@ -110,14 +114,14 @@ public class UserServiceImpl implements UserService {
         if (findUserByUserName(userForm.getUsername()) != null) {
             return ResultUtil.error(ResultEnum.USER_EXIST);
         }
-        String password = userForm.getPassword();
-        password = new BCryptPasswordEncoder().encode(password);
-        userForm.setPassword(password);
+        String  password = new BCryptPasswordEncoder().encode(DEFAULT_PASSWORD);
         User user = new User();
-        BeanUtils.copyProperties(userForm, user);
-        user.setRole(0);
+        user.setUsername(userForm.getUsername());
+        user.setPassword(password);
+        user.setRole(RoleEnum.USER.getValue());
         if (insert(user)) {
-            return ResultUtil.success();
+            User result = userMapper.findUserByUserName(user.getUsername());
+            return ResultUtil.success(result);
         }
         return ResultUtil.error(ResultEnum.SERVER_ERROR);
     }
@@ -159,12 +163,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResultVO addRole(Long id) {
+    public ResultVO addRole(Long id,Integer role) {
+        if (role<0||role>1){
+            return ResultUtil.error(ResultEnum.Insert_MSG_ERROR);
+        }
         User user = userMapper.selectByPrimaryKey(id);
         if (user == null) {
             return ResultUtil.error(ResultEnum.USER_NOT_EXIST);
         }
-        user.setRole(2);
+        user.setRole(role);
         if (update(user)) {
             return ResultUtil.success();
         }
@@ -173,7 +180,54 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResultVO selectAll() {
-        return ResultUtil.success(userMapper.selectAll());
+        return ResultUtil.success(userMapper.selectAllUser());
+    }
+
+    @Override
+    public ResultVO updatePw(UpdateUserForm form) {
+        User self = getCurrentUser();
+        if (!form.getId().equals(self.getId())){
+            return ResultUtil.error(ResultEnum.NON_PERSONAL_OPRERATION);
+        }
+        String oldPw = (new BCryptPasswordEncoder().encode(form.getOldPw()));
+        if (new BCryptPasswordEncoder().matches(oldPw,self.getPassword())){
+            return ResultUtil.error(ResultEnum.PASSWORD_ERROR);
+        }
+        User user = userMapper.selectByPrimaryKey(form.getId());
+        user.setPassword(new BCryptPasswordEncoder().encode(form.getNewPw()));
+        if (update(user)){
+            return ResultUtil.success();
+        }
+        return ResultUtil.error(ResultEnum.SERVER_ERROR);
+    }
+
+    @Override
+    public ResultVO resetUserPw(long id) {
+        User user = userMapper.selectByPrimaryKey(id);
+        if (user==null){
+            return ResultUtil.error(ResultEnum.USER_NOT_EXIST);
+        }
+        user.setPassword(new BCryptPasswordEncoder().encode(DEFAULT_PASSWORD));
+        if (update(user)){
+            return ResultUtil.success();
+        }
+        return ResultUtil.error(ResultEnum.SERVER_ERROR);
+    }
+
+    @Override
+    public ResultVO updateUserName(long id,String username) {
+        User user = userMapper.selectByPrimaryKey(id);
+        if (user==null){
+            return ResultUtil.error(ResultEnum.USER_NOT_EXIST);
+        }
+        if (userMapper.findUserByUserName(username)!=null){
+            return ResultUtil.error(ResultEnum.USER_EXIST);
+        }
+        user.setUsername(username);
+        if (update(user)){
+            return ResultUtil.success();
+        }
+        return ResultUtil.error(ResultEnum.SERVER_ERROR);
     }
 
 

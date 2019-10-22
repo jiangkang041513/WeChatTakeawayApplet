@@ -2,10 +2,7 @@ package com.swpu.uchain.takeawayapplet.service;
 
 import com.swpu.uchain.takeawayapplet.VO.ResultVO;
 import com.swpu.uchain.takeawayapplet.entity.MenuBaseType;
-import com.swpu.uchain.takeawayapplet.form.GetClickForm;
-import com.swpu.uchain.takeawayapplet.form.InsertMenuBaseForm;
-import com.swpu.uchain.takeawayapplet.form.InsertMenuBaseTypeForm;
-import com.swpu.uchain.takeawayapplet.form.InsertMenuForm;
+import com.swpu.uchain.takeawayapplet.form.*;
 
 import java.util.List;
 
@@ -20,7 +17,7 @@ public interface MenuService {
 
     ResultVO insertMenuBaseType(InsertMenuBaseTypeForm typeForm);
 
-    ResultVO insertMenuBase(InsertMenuBaseForm baseForm);
+    ResultVO insertMenuBase(List<InsertMenuBaseForm> forms);
 
     ResultVO insertMenu(InsertMenuForm menuForm);
 
@@ -29,4 +26,14 @@ public interface MenuService {
     ResultVO deleteOrderByDate(long date);
 
     ResultVO getHighestClickMenuBase(GetClickForm form);
+
+    ResultVO selectAllMenuBaseType();
+
+    ResultVO deleteBaseType(Integer id);
+
+    ResultVO updateBaseType(MenuBaseType type);
+
+    ResultVO deleteMenuBase(Integer id);
+
+    ResultVO updateMenuBaseName(UpdateMenuBaseForm form);
 }

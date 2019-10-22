@@ -38,4 +38,9 @@
     from user
     where username=#{username}
   </select>
+  <select id="selectAllUser" resultType="com.swpu.uchain.takeawayapplet.VO.UserVO">
+    select id,username,role
+    from user
+    where role = 0
+  </select>
 </mapper>

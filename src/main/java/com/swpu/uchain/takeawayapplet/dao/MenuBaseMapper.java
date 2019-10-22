@@ -22,4 +22,6 @@ public interface MenuBaseMapper {
     MenuBase selectByProductName(String productName);
 
     int updateBaseClickNum(Integer id);
+
+    List<MenuBase> getListByTypeId(Integer id);
 }
